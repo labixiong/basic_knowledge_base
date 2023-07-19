@@ -1,0 +1,51 @@
+div {
+  border: 1px solid red;
+}
+
+div.second {
+  border: 1px solid green;
+}
+
+div#third {
+  border: 1px solid blue;
+}
+
+/*
+  属性选择器
+  [attr] --> input[type] 匹配带有一个名为type的input元素
+  [attr=value] --> input[type="text"] 匹配一个type属性值为text的input元素
+  [attr~=value] --> p[class~='special'] 匹配类里面包含special类的p元素
+  [attr|=value] --> div[lang="zh"] 匹配lang属性为zh或zh后紧随一个连字符的div元素
+  [attr^=value] --> li[class^="box-"] 匹配一个开头为value子字符串的类的li元素
+  [attr$=value] --> li[class$="-box"] 匹配一个结尾为value子字符串的类的li元素
+  [attr*=value] --> li[class*="box"] 匹配一个包含value子字符串(任意位置)的类的li元素
+  */
+input[type="text"] {
+  border: 1px solid blue;
+}
+
+input[name="five"] {
+  display: block;
+  height: 50px;
+  border: 1px solid red !important;
+}
+
+
+
+div.box {
+  border: 1px solid red;
+  margin-top: 100px;
+  height: 200px;
+  width: 200px;
+}
+
+div.box * {
+  border: none;
+}
+
+/* div.box *:first-child === div.box :first-child  */
+div.box *:first-child {
+  height: 20px;
+  background-color: rgba(yellow, .5);
+  border: 1px solid yellow;
+}
