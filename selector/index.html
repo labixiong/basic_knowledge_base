@@ -20,17 +20,28 @@
 
   <input type="text" name="five" />
 
-  <p class="special"></p>
-  <p class="special special2"></p>
+  <p class="special">special</p>
+  <p class="special special2">special special2</p>
 
-  <div lang="zh"></div>
-  <div lang="zh_CN"></div>
+  <div lang="zh">zh</div>
+  <div lang="zh_CN">zh_CN</div>
+
+  <div class="box-begin">开头</div>
+  <div class="end-box">结尾</div>
+  <div class="contain-box-wrapper">包含</div>
 
   <div class="box">
     <div class="item1"></div>
     <div class="item2"></div>
     <div class="item3"></div>
   </div>
+
+  <!-- 
+    伪类是选择器的一种,用于选择处于特定状态的元素 : 单冒号开头
+    伪元素是用于在文档中插入虚构的元素  :: 双冒号开头,为了保持向后兼容,也支持早期的单冒号开头的伪元素
+    伪类和伪元素https://developer.mozilla.org/zh-CN/docs/Learn/CSS/Building_blocks/Selectors/Pseudo-classes_and_pseudo-elements
+   -->
+  <div class="pseudo">pseudo class</div>
 
 
   <script src="./index.js"></script>

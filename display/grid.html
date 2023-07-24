@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grid</title>
+  <style>
+    .grid-container {
+      width: 300px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, 100px);
+      /* grid-template-rows: repeat(auto-fill, 100px); */
+    }
+
+    .grid-container > div {
+      border: 1px solid red;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 
+    设置为grid布局后,容器子元素的float \ display:inline-block \ display:table-cell \ vertical-align \ column-*等都将失效
+
+    容器属性:
+      grid-template-columns: 100px 100px 100px;
+      grid-template-rows: 100px 100px 100px;
+    
+      也可以使用百分比
+      grid-template-rows: 33.33% 33.33% 33.33%;
+      grid-template-rows: 33.33% 33.33% 33.33%;
+
+      repeat关键字: 
+        grid-template-rows: repeat(3, 33.33%);
+        grid-template-rows: repeat(3, 33.33%);
+
+        第一个是要重复的次数,第二个是所要重复的值
+
+        重复某种模式也是可以的,如下:
+        grid-template-columns: repeat(2, 100px 20px 80px);  第一列第四列100px 第二列第五列20px 第三列第六列80px
+
+      auto-fill:
+        grid-template-columns: repeat(auto-fill, 100px);
+
+        每列宽度100px,然后自动填充,直到容器不能放置更多的列
+
+      auto-fit: 
+        跟auto-fill的行为基本相同,只有当容器足够宽,可以在一行容纳所有单元格,并且单元格宽度不固定的时候,才会有差异
+        auto-fill会用空各自填充剩余宽度,auto-fit则会尽量扩大单元格的宽度
+
+      fr:
+        
+   -->
+  1
+  <div class="grid-container">
+    <div>1</div>
+    <div>2</div>
+    <div>3</div>
+    <div>4</div>
+    <div>5</div>
+    <div>6</div>
+    <div>7</div>
+    <div>8</div>
+    <div>9</div>
+  </div>
+  2
+</body>
+</html>
