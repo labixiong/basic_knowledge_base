@@ -1,110 +1,39 @@
 [
   {
-    "name": "blogs",
+    "name": null,
     "methods": [
       "HEAD",
       "GET"
     ],
     "paramNames": [],
-    "path": "/b",
-    "regexp": "/^\\/b(?:\\/(?=$))?$/",
+    "path": "/",
+    "regexp": "/^(?:\\/(?=$))?$/",
     "stack": [
+      "anonymous",
       "wrappedController"
     ]
   },
   {
-    "name": "new_blog",
+    "name": null,
     "methods": [
       "HEAD",
       "GET"
     ],
     "paramNames": [],
-    "path": "/b/new",
-    "regexp": "/^\\/b\\/new(?:\\/(?=$))?$/",
+    "path": "/login",
+    "regexp": "/^\\/login(?:\\/(?=$))?$/",
     "stack": [
       "wrappedController"
     ]
   },
   {
-    "name": "blogs",
+    "name": null,
     "methods": [
       "POST"
     ],
     "paramNames": [],
-    "path": "/b",
-    "regexp": "/^\\/b(?:\\/(?=$))?$/",
-    "stack": [
-      "wrappedController"
-    ]
-  },
-  {
-    "name": "blog",
-    "methods": [
-      "HEAD",
-      "GET"
-    ],
-    "paramNames": [
-      {
-        "name": "id",
-        "prefix": "/",
-        "delimiter": "/",
-        "optional": false,
-        "repeat": false,
-        "partial": false,
-        "asterisk": false,
-        "pattern": "[^\\/]+?"
-      }
-    ],
-    "path": "/b/:id",
-    "regexp": "/^\\/b\\/((?:[^\\/]+?))(?:\\/(?=$))?$/",
-    "stack": [
-      "wrappedController"
-    ]
-  },
-  {
-    "name": "edit_blog",
-    "methods": [
-      "HEAD",
-      "GET"
-    ],
-    "paramNames": [
-      {
-        "name": "id",
-        "prefix": "/",
-        "delimiter": "/",
-        "optional": false,
-        "repeat": false,
-        "partial": false,
-        "asterisk": false,
-        "pattern": "[^\\/]+?"
-      }
-    ],
-    "path": "/b/:id/edit",
-    "regexp": "/^\\/b\\/((?:[^\\/]+?))\\/edit(?:\\/(?=$))?$/",
-    "stack": [
-      "wrappedController"
-    ]
-  },
-  {
-    "name": "blog",
-    "methods": [
-      "PATCH",
-      "PUT"
-    ],
-    "paramNames": [
-      {
-        "name": "id",
-        "prefix": "/",
-        "delimiter": "/",
-        "optional": false,
-        "repeat": false,
-        "partial": false,
-        "asterisk": false,
-        "pattern": "[^\\/]+?"
-      }
-    ],
-    "path": "/b/:id",
-    "regexp": "/^\\/b\\/((?:[^\\/]+?))(?:\\/(?=$))?$/",
+    "path": "/login",
+    "regexp": "/^\\/login(?:\\/(?=$))?$/",
     "stack": [
       "wrappedController"
     ]

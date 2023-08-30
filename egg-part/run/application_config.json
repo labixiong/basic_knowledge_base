@@ -18,7 +18,7 @@
       "protocolWhiteList": [],
       "defaultMiddleware": "csrf,hsts,methodnoallow,noopen,nosniff,csp,xssProtection,xframe,dta",
       "csrf": {
-        "enable": true,
+        "enable": false,
         "type": "ctoken",
         "ignoreJSON": false,
         "useSession": false,
@@ -39,8 +39,7 @@
             ]
           }
         ],
-        "refererWhiteList": [],
-        "matching": "<Function anonymous>"
+        "refererWhiteList": []
       },
       "xframe": {
         "enable": true,
@@ -119,6 +118,8 @@
         "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg-logrotator\\config\\locales",
         "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg-static\\config\\locales",
         "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg-view\\config\\locales",
+        "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg-view-ejs\\config\\locales",
+        "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg-redis\\config\\locales",
         "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\locales",
         "D:\\code\\practice\\basic_knowledge_base\\egg-part\\config\\locales"
       ],
@@ -190,11 +191,36 @@
       "maxFiles": 1000
     },
     "view": {
+      "root": [
+        "D:\\code\\practice\\basic_knowledge_base\\egg-part\\app\\view"
+      ],
+      "cache": false,
+      "defaultExtension": ".ejs",
+      "defaultViewEngine": "ejs",
+      "mapping": {
+        ".ejs": "ejs",
+        ".html": "ejs"
+      }
+    },
+    "ejs": {
       "root": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\app\\view",
       "cache": false,
-      "defaultExtension": ".html",
-      "defaultViewEngine": "",
-      "mapping": {}
+      "debug": false,
+      "compileDebug": true,
+      "delimiter": null,
+      "strict": false
+    },
+    "redis": {
+      "default": {},
+      "app": true,
+      "agent": false,
+      "supportTimeCommand": true,
+      "client": {
+        "port": 6379,
+        "host": "127.0.0.1",
+        "password": "<String len: 0>",
+        "db": 0
+      }
     },
     "env": "local",
     "name": "egg-part",
@@ -218,7 +244,10 @@
       "author": "",
       "license": "ISC",
       "dependencies": {
-        "egg": "^3.17.4"
+        "axios": "^1.5.0",
+        "egg": "^3.17.4",
+        "egg-redis": "^2.5.0",
+        "egg-view-ejs": "^3.0.0"
       },
       "devDependencies": {
         "egg-bin": "^6.4.2"
@@ -334,9 +363,19 @@
       "responseTimeout": 60000
     },
     "onClientError": null,
+    "middleware": [
+      "mymid"
+    ],
+    "mymid": {
+      "enable": true,
+      "match": "/login",
+      "a": 1,
+      "b": 2
+    },
+    "$apiBase": "http://study.yuanjin.tech",
     "coreMiddlewares": "~config~coreMiddleware",
-    "appMiddlewares": [],
-    "appMiddleware": "~config~appMiddlewares"
+    "appMiddlewares": "~config~middleware",
+    "appMiddleware": "~config~middleware"
   },
   "plugins": {
     "onerror": {
@@ -463,7 +502,7 @@
       "dependencies": [],
       "optionalDependencies": [],
       "env": [],
-      "from": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\config\\plugin.js",
+      "from": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\plugin.js",
       "path": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg-static",
       "version": "2.3.1"
     },
@@ -489,7 +528,34 @@
       "env": [],
       "from": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\plugin.js",
       "path": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg-view",
-      "version": "2.1.4"
+      "version": "2.1.4",
+      "dependents": [
+        "ejs"
+      ]
+    },
+    "ejs": {
+      "enable": true,
+      "package": "egg-view-ejs",
+      "name": "ejs",
+      "dependencies": [
+        "view"
+      ],
+      "optionalDependencies": [],
+      "env": [],
+      "from": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\config\\plugin.js",
+      "path": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg-view-ejs",
+      "version": "3.0.0"
+    },
+    "redis": {
+      "enable": true,
+      "package": "egg-redis",
+      "name": "redis",
+      "dependencies": [],
+      "optionalDependencies": [],
+      "env": [],
+      "from": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\config\\plugin.js",
+      "path": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg-redis",
+      "version": "2.5.0"
     }
   },
   "appInfo": {
@@ -510,7 +576,10 @@
       "author": "",
       "license": "ISC",
       "dependencies": {
-        "egg": "^3.17.4"
+        "axios": "^1.5.0",
+        "egg": "^3.17.4",
+        "egg-redis": "^2.5.0",
+        "egg-view-ejs": "^3.0.0"
       },
       "devDependencies": {
         "egg-bin": "^6.4.2"
