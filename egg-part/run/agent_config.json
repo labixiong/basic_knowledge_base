@@ -181,13 +181,7 @@
       "default": {},
       "app": true,
       "agent": false,
-      "supportTimeCommand": true,
-      "client": {
-        "port": 6379,
-        "host": "127.0.0.1",
-        "password": "<String len: 0>",
-        "db": 0
-      }
+      "supportTimeCommand": true
     },
     "env": "local",
     "name": "egg-part",
@@ -205,7 +199,10 @@
       "description": "",
       "main": "index.js",
       "scripts": {
-        "dev": "egg-bin dev"
+        "dev": "egg-bin dev",
+        "prod": "EGG_SERVER_ENV=prod egg-bin dev",
+        "start": "egg-scripts start --daemon",
+        "stop": "egg-scripts stop"
       },
       "keywords": [],
       "author": "",
@@ -214,6 +211,7 @@
         "axios": "^1.5.0",
         "egg": "^3.17.4",
         "egg-redis": "^2.5.0",
+        "egg-scripts": "^2.17.0",
         "egg-view-ejs": "^3.0.0"
       },
       "devDependencies": {
@@ -258,7 +256,7 @@
       "onerror": "<Function onerror>"
     },
     "logger": {
-      "dir": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\logs\\egg-part",
+      "dir": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\logs",
       "encoding": "utf8",
       "env": "local",
       "level": "INFO",
@@ -316,7 +314,7 @@
     "cluster": {
       "listen": {
         "path": "",
-        "port": 7001,
+        "port": 7000,
         "hostname": ""
       }
     },
@@ -532,7 +530,10 @@
       "description": "",
       "main": "index.js",
       "scripts": {
-        "dev": "egg-bin dev"
+        "dev": "egg-bin dev",
+        "prod": "EGG_SERVER_ENV=prod egg-bin dev",
+        "start": "egg-scripts start --daemon",
+        "stop": "egg-scripts stop"
       },
       "keywords": "~config~pkg~keywords",
       "author": "",
@@ -541,6 +542,7 @@
         "axios": "^1.5.0",
         "egg": "^3.17.4",
         "egg-redis": "^2.5.0",
+        "egg-scripts": "^2.17.0",
         "egg-view-ejs": "^3.0.0"
       },
       "devDependencies": {

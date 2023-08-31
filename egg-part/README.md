@@ -355,3 +355,324 @@ exports.cluster = {
   },
 };
 ```
+
+## 部署
+
+传统的nodejs部署需要pm2来管理进程，因为需要开启多个子进程来做其他事情，比方说捕获异常等，不会因为异常而终止运行
+
+### egg-cluster
+
+egg内置了一个插件 `egg-cluster`，它的作用是在egg启动时，启动多个子进程
+
+因此，egg实际上是运行在多个进程上的应用，这些进程的职责分别为：
+
+- 主进程：Master进程，稳定性极高的进程。主要负责管理其他进程
+- worker进程：由主进程开启，通常情况下数量和cpu的核数保持一致。worker进程是真正用于处理请求的进程。某次请求具体交给哪个worker进程来处理由主进程调度
+- Agent进程：由主进程在启动后开启，只有一个，相当于其他进程的秘书，通常用于做各种脏活累活，比如维持一个长连接。agent进程通常对开发者是隐形的，平时不会接触它
+
+### egg-scripts
+
+1. 安装
+```shell
+npm i egg-scripts
+```
+2. 配置脚本
+```json
+{
+  "scripts": {
+    "start": "egg-scripts start --daemon",
+    "stop": "egg-scripts stop"
+  }
+}
+```
+3. 运行
+```shell
+npm start # 启动
+npm run stop # 停止
+```
+
+启动命令中支持以下参数：
+
+- --title=name，设置应用全名，默认为egg-server-${APP_NAME}
+
+  - 在停止时，建议指定停止的egg应用名称，否则，如果服务器运行了多个egg应用，将会停止所有的egg应用
+
+      ```shell
+        egg-scripts stop --title=myegg-server
+      ```
+
+- --port=7001 端口号，默认会读取环境变量 process.env.PORT，如未传递将使用框架内置端口 7001。
+
+- --daemon 是否允许以守护进程的模式运行。
+
+- --env=prod 框架运行环境，默认会读取环境变量 process.env.EGG_SERVER_ENV， 如未传递将使用框架内置环境 prod。
+
+- --workers=2 框架 worker 线程数，默认会创建和 CPU 核数相当的 app worker 数，可以充分的利用 CPU 资源。
+
+- --https.key 指定 HTTPS 所需密钥文件的完整路径。
+
+- --https.cert 指定 HTTPS 所需证书文件的完整路径。
+
+
+## 编写定时任务
+
+- 定期更新缓存
+- 定期删除一些不再使用的文件
+- 定期检查数据库，删除无意义的数据
+- 定期爬取一些数据，保存到数据库
+- 等等
+
+只需要在app/schedule文件夹中编写各种任务即可
+
+egg启动后，会读取文件夹中的所有模块，把它们的导出当做任务定期执行
+
+1. 方式1
+
+```js
+// app/schedule/cacheLocals
+const Subscription = require("egg").Subscription;
+
+module.exports = class extends Subscription {
+  // 通过 schedule 属性来设置定时任务的执行间隔等配置
+  static get schedule() {
+    return {
+      interval: "1m", // 1 分钟间隔
+      type: "all", // 指定所有的 worker 都需要执行
+    };
+  }
+
+  // subscribe 是真正定时任务执行时被运行的函数
+  async subscribe() {
+    console.log("更新缓存");
+    const key = "province";
+    const resp = await this.app.axios.get(`${this.config.$apiBase}/api/local`);
+    //缓存
+    this.app.redis.set(key, JSON.stringify(resp.data));
+  }
+};
+```
+
+2. 方式2
+
+```js
+module.exports = {
+  schedule: {
+    interval: '1m', // 1 分钟间隔
+    type: 'all', // 指定所有的 worker 都需要执行
+  },
+  async task(ctx) { // task 是真正定时任务执行时被运行的函数
+    console.log("更新缓存");
+    const key = "province";
+    const resp = await ctx.app.axios.get(`${ctx.app.config.$apiBase}/api/local`);
+    //缓存
+    ctx.app.redis.set(key, JSON.stringify(resp.data));
+  },
+}
+```
+### schedule配置
+
+无论使用哪一种方式，都必须提供`schedule`属性来配置任务
+
+- `interval`：字符串，描述任务执行的间隔时间。参考：https://github.com/vercel/ms
+
+- `cron`：字符串，任务执行的契机，它和`interval`设置一个即可。
+
+  参考：https://github.com/harrisiirak/cron-parser
+
+  在线生成器：https://cron.qqe2.com/
+
+  ```js
+  "* */3 * * * * "  // 每隔3分钟执行一次
+  "0 0 0 * * 3" // 每周3的凌晨执行一次
+  "0 0 0 24 12 *" // 每年圣诞节执行一次
+  ```
+
+- `type`，任务类型，支持两种配置：
+
+  - `worker`，只有一个 worker 会执行这个定时任务，每次执行定时任务的 worker 的选择是随机的
+  - `all`，每个 worker 都会执行这个定时任务。
+
+- `immediate`，如果设置为`true`，应用启动时会立即执行该任务
+
+- `env`，数组，只有在指定的环境中才会启动该任务
+
+- `disable`，一个开关，表示任务是否被禁用
+
+> 更多关于任务的操作参考：https://eggjs.org/zh-cn/basics/schedule.html
+
+
+## 日志
+
+egg在内部使用egg-logger插件完成日志记录
+
+### 日志路径
+
+默认情况下，日志保存在 logs/工程名 中
+
+可以通过下面的配置自定义日志路径
+
+```js
+// config/config.default.js
+// 建议根据不同的环境来配置不同的日志路径
+const path = require('path')
+exports.logger = {
+  dir: path.resolve(__dirname, '../logs') // 采用自定义路径
+}
+```
+
+egg的内置日志分为下面几类，通过相关api即可完成日志记录
+
+|    类别    |    输出目标    |        含义         |                api                 |
+| :--------- | :------------- | :------------------ | :--------------------------------- |
+| **appLogger** | **项目名-web.log** | **应用相关日志** |   **ctx.logger<br />app.logger**   |
+| coreLogger |  egg-web.log   | 框架内核、插件日志  | ctx.coreLogger<br>app.coreLogger |
+| errorLogger | common-error.log | error级别的日志均会记录到这里 | 详见日志级别 |
+| agentLogger | egg-agent.log | agent的进程日志 | agent.logger |
+
+无论使用哪个`api`记录日志，都会有对应的**日志级别**，分别是
+
+```js
+日志对象.debug("some info"); // 记录调试信息
+日志对象.info("some info"); // 记录普通信息
+日志对象.warn("some info"); // 记录警告信息
+日志对象.error(new Error("some info")); // 记录错误信息，应该使用错误对象，否则无法得到堆栈信息
+```
+
+### 自定义日志
+
+```js
+// 配置文件
+// 配置自定义日志类别
+exports.customLogger = {
+  myLogger: { // 属性名为类别名称
+    file: path.resolve(__dirname, "../logs/my-logger.log"), // 配置日志文件
+    // 配置哪些级别及其以上的日志要被记录到日志文件，设置为NONE则会关闭日志记录，默认为 INFO
+    level: 'DEBUG', 
+    // 配置哪些级别及其以上的日志要被打印到控制台，设置为NONE则会关闭日志记录，默认为 INFO
+    consoleLevel: 'DEBUG',
+    // 配置日志文件的编码，默认为 utf-8
+    encoding: 'gbk',
+    // 是否使用json格式记录日志，默认为false
+    outputJSON: true,
+    // app logger
+    formatter(meta) {
+        return `[${meta.date}] ${meta.message}`;
+    },
+    // ctx logger
+    contextFormatter(meta) {
+      return `[${meta.date}] [${meta.ctx.method} ${meta.ctx.url}] ${meta.message}`;
+    },
+  }
+}
+```
+
+记录自定义日志：
+
+```js
+app.getLogger('myLogger') // 获取全局应用日志对象
+ctx.getLogger('myLogger') // 获取上下文日志对象
+```
+
+> schedule的日志就是一个自定义日志，日志类别名为`scheduleLogger`
+
+> 更多日志的功能参考：https://eggjs.org/zh-cn/core/logger.html\
+
+
+## 使用session
+
+## 异常处理
+
+### 使用koa的异常处理模式
+```js
+// app.js
+module.exports = (app) => {
+  app.on("error", (err, ctx) => { // 和 koa 的异常处理类似
+    console.log(err, ctx);
+  });
+};
+```
+
+### 使用egg的异常处理模式
+
+为了更方便的处理常见的应用场景，egg内部使用了`egg-onerror`插件来处理异常
+
+默认情况下，`egg-onerror`会对异常做出以下处理
+
+```js
+// config/config.default.js
+exports.onerror = { // 配置 egg-onerror 插件
+  errorPageUrl: '/error',// 线上页面发生异常时，重定向到这个地址
+  all(err, ctx) {
+    // 在此处定义针对所有响应类型的错误处理方法
+    // 注意，定义了 config.all 之后，其他错误处理方法不会再生效
+    ctx.body = 'error';
+    ctx.status = 500;
+  },
+  html(err, ctx) {
+    // html hander
+    ctx.body = '<h3>error</h3>';
+    ctx.status = 500;
+  },
+  json(err, ctx) {
+    // json hander
+    ctx.body = { message: 'error' };
+    ctx.status = 500;
+  }
+};
+```
+
+框架支持通过配置，将默认的 HTML 请求的 404 响应重定向到指定的页面。
+
+```js
+// config/config.default.js
+exports.notfound = {
+  pageUrl: '/404',
+};
+```
+
+## 其余功能
+
+- [文件上传](https://eggjs.org/zh-cn/basics/controller.html#获取上传的文件)
+- [国际化I18n](https://eggjs.org/zh-cn/core/i18n.html)
+- [helper对象](https://eggjs.org/zh-cn/basics/objects.html#helper)
+- [验证](https://eggjs.org/zh-cn/basics/controller.html#参数校验)
+
+
+## 框架扩展
+
+- application， `app/extend/application.js`
+- context， `app/extend/context.js`
+- request，`app/extend/request.js`
+- response，`app/extend/response.js`
+- helper，`app/extend/helper.js`
+
+
+### 扩展决策树
+
+mermaid能绘制哪些图？
+
+- 饼状图：使用pie关键字，具体用法后文将详细介绍
+- 流程图：使用graph关键字，具体用法后文将详细介绍
+- 序列图：使用sequenceDiagram关键字
+- 甘特图：使用gantt关键字
+- 类图：使用classDiagram关键字
+- 状态图：使用stateDiagram关键字
+- 用户旅程图：使用journey关键字
+
+```mermaid
+graph TD
+opInContext[一定在请求处理中发生吗]
+opOfContext[继续确定扩展目标]
+setInRequest{{扩展request}}
+setInResponse{{扩展response}}
+setInContext{{扩展context}}
+setInHelper{{扩展helper}}
+setInApplication{{扩展application}}
+opInContext-->|是|opOfContext
+opOfContext-->|获取请求中的信息|setInRequest
+opOfContext-->|设置响应中的信息|setInResponse
+opOfContext-->|其他|setInContext
+opOfContext-->|其他|setInHelper
+opInContext-->|否|setInApplication
+```
+

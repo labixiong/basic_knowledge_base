@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "egg-bin dev",
-    "prod": "EGG_SERVER_ENV=prod egg-bin dev"
+    "prod": "EGG_SERVER_ENV=prod egg-bin dev",
+    "start": "egg-scripts start --daemon",
+    "stop": "egg-scripts stop"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +16,7 @@
     "axios": "^1.5.0",
     "egg": "^3.17.4",
     "egg-redis": "^2.5.0",
+    "egg-scripts": "^2.17.0",
     "egg-view-ejs": "^3.0.0"
   },
   "devDependencies": {

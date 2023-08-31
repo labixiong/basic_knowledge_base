@@ -73,17 +73,32 @@
     "a": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\config\\config.default.js",
     "b": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\config\\config.default.js"
   },
-  "redis": {
-    "client": {
+  "cluster": {
+    "listen": {
       "port": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\config\\config.default.js",
-      "host": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\config\\config.default.js",
-      "password": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\config\\config.default.js",
-      "db": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\config\\config.default.js"
+      "path": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
+      "hostname": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js"
+    }
+  },
+  "logger": {
+    "dir": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\config\\config.default.js",
+    "encoding": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
+    "env": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
+    "level": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
+    "consoleLevel": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
+    "disableConsoleAfterReady": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
+    "outputJSON": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
+    "buffer": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
+    "appLogName": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
+    "coreLogName": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
+    "agentLogName": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
+    "errorLogName": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
+    "coreLogger": {
+      "consoleLevel": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.local.js"
     },
-    "default": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg-redis\\config\\config.default.js",
-    "app": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg-redis\\config\\config.default.js",
-    "agent": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg-redis\\config\\config.default.js",
-    "supportTimeCommand": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg-redis\\config\\config.default.js"
+    "allowDebugAtProd": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
+    "enablePerformanceTimer": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
+    "enableFastContextLogger": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js"
   },
   "$apiBase": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\config\\config.default.js",
   "session": {
@@ -182,6 +197,12 @@
     "delimiter": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg-view-ejs\\config\\config.default.js",
     "strict": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg-view-ejs\\config\\config.default.js"
   },
+  "redis": {
+    "default": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg-redis\\config\\config.default.js",
+    "app": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg-redis\\config\\config.default.js",
+    "agent": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg-redis\\config\\config.default.js",
+    "supportTimeCommand": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg-redis\\config\\config.default.js"
+  },
   "env": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
   "name": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
   "cookies": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
@@ -197,7 +218,10 @@
     "description": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
     "main": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
     "scripts": {
-      "dev": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js"
+      "dev": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
+      "prod": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
+      "start": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
+      "stop": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js"
     },
     "keywords": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
     "author": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
@@ -206,6 +230,7 @@
       "axios": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
       "egg": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
       "egg-redis": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
+      "egg-scripts": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
       "egg-view-ejs": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js"
     },
     "devDependencies": {
@@ -249,26 +274,6 @@
     },
     "onerror": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js"
   },
-  "logger": {
-    "dir": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
-    "encoding": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
-    "env": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
-    "level": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
-    "consoleLevel": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
-    "disableConsoleAfterReady": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
-    "outputJSON": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
-    "buffer": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
-    "appLogName": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
-    "coreLogName": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
-    "agentLogName": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
-    "errorLogName": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
-    "coreLogger": {
-      "consoleLevel": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.local.js"
-    },
-    "allowDebugAtProd": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
-    "enablePerformanceTimer": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
-    "enableFastContextLogger": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js"
-  },
   "httpclient": {
     "enableDNSCache": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
     "dnsCacheLookupInterval": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
@@ -297,13 +302,6 @@
   "coreMiddleware": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
   "workerStartTimeout": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
   "serverTimeout": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
-  "cluster": {
-    "listen": {
-      "path": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
-      "port": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
-      "hostname": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js"
-    }
-  },
   "clusterClient": {
     "maxWaitTime": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js",
     "responseTimeout": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\node_modules\\egg\\config\\config.default.js"

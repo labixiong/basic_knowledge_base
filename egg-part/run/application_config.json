@@ -140,6 +140,15 @@
       "scheduleLogger": {
         "consoleLevel": "NONE",
         "file": "egg-schedule.log"
+      },
+      "myLogger": {
+        "file": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\logs\\my-logger.log",
+        "level": "DEBUG",
+        "consoleLevel": "DEBUG",
+        "encoding": "gbk",
+        "outputJSON": true,
+        "formatter": "<Function formatter>",
+        "contextFormatter": "<Function contextFormatter>"
       }
     },
     "schedule": {
@@ -214,13 +223,7 @@
       "default": {},
       "app": true,
       "agent": false,
-      "supportTimeCommand": true,
-      "client": {
-        "port": 6379,
-        "host": "127.0.0.1",
-        "password": "<String len: 0>",
-        "db": 0
-      }
+      "supportTimeCommand": true
     },
     "env": "local",
     "name": "egg-part",
@@ -238,7 +241,10 @@
       "description": "",
       "main": "index.js",
       "scripts": {
-        "dev": "egg-bin dev"
+        "dev": "egg-bin dev",
+        "prod": "EGG_SERVER_ENV=prod egg-bin dev",
+        "start": "egg-scripts start --daemon",
+        "stop": "egg-scripts stop"
       },
       "keywords": [],
       "author": "",
@@ -247,6 +253,7 @@
         "axios": "^1.5.0",
         "egg": "^3.17.4",
         "egg-redis": "^2.5.0",
+        "egg-scripts": "^2.17.0",
         "egg-view-ejs": "^3.0.0"
       },
       "devDependencies": {
@@ -291,15 +298,15 @@
       "returnRawBody": true
     },
     "logger": {
-      "dir": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\logs\\egg-part",
+      "dir": "D:\\code\\practice\\basic_knowledge_base\\egg-part\\logs",
       "encoding": "utf8",
       "env": "local",
-      "level": "INFO",
-      "consoleLevel": "INFO",
+      "level": "DEBUG",
+      "consoleLevel": "DEBUG",
       "disableConsoleAfterReady": false,
-      "outputJSON": false,
+      "outputJSON": true,
       "buffer": true,
-      "appLogName": "egg-part-web.log",
+      "appLogName": "duyi-app-web.log",
       "coreLogName": "egg-web.log",
       "agentLogName": "egg-agent.log",
       "errorLogName": "common-error.log",
@@ -354,7 +361,7 @@
     "cluster": {
       "listen": {
         "path": "",
-        "port": 7001,
+        "port": 7000,
         "hostname": ""
       }
     },
@@ -570,7 +577,10 @@
       "description": "",
       "main": "index.js",
       "scripts": {
-        "dev": "egg-bin dev"
+        "dev": "egg-bin dev",
+        "prod": "EGG_SERVER_ENV=prod egg-bin dev",
+        "start": "egg-scripts start --daemon",
+        "stop": "egg-scripts stop"
       },
       "keywords": "~config~pkg~keywords",
       "author": "",
@@ -579,6 +589,7 @@
         "axios": "^1.5.0",
         "egg": "^3.17.4",
         "egg-redis": "^2.5.0",
+        "egg-scripts": "^2.17.0",
         "egg-view-ejs": "^3.0.0"
       },
       "devDependencies": {
