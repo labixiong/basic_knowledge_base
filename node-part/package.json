@@ -1,0 +1,15 @@
+{
+  "name": "node-part",
+  "version": "1.0.0",
+  "description": "1. nodejs是一个js的运行环境\r 2. 它比浏览器拥有更多的能力",
+  "main": "index.js",
+  "scripts": {
+    "dev": ""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.5.7"
+  }
+}
