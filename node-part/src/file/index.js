@@ -216,3 +216,8 @@ async function test() {
 test()
 
 
+
+// 删除文件
+// fs.unlink(path)
+
+
