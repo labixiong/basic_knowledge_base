@@ -312,5 +312,26 @@ IO的速度往往低于内存和CPU的交互速度
 
 数据即可从源头流向内存，也可从内存流向源头
 
-
 ## net模块
+
+```js
+// net/index.js
+```
+
+## http模块
+
+建立在net模块之上
+
+```js
+/**
+ * 客户端
+ * 请求 -- ClientRequest对象
+ * 响应 -- IncomingMessage对象
+ * */
+
+/**
+ * 服务器
+ * 请求 -- IncomingMessage对象
+ * 响应 -- ServerResponse对象
+ * */
+```
