@@ -323,6 +323,7 @@ IO的速度往往低于内存和CPU的交互速度
 建立在net模块之上
 
 ```js
+// /src/http/index.js
 /**
  * 客户端
  * 请求 -- ClientRequest对象
@@ -334,4 +335,23 @@ IO的速度往往低于内存和CPU的交互速度
  * 请求 -- IncomingMessage对象
  * 响应 -- ServerResponse对象
  * */
+
+/**
+ * 练习搭建静态资源服务器
+ * */
 ```
+
+
+## https模块
+
+
+## node生命周期
+
+main(入口模块) -> 
+eventLoop(开启事件循环) -> 
+timers(setTimeout, setInterval等计时器操作) -> 
+poll(除计时器和setImmediate之外的绝大部分回调都会放入该队列) ->
+check(setImmediate等) -> 
+结束本次事件循环，继续下次(timers -> poll -> check)
+
+nextTick和Promise独立于事件循环之外，运行时首先清空这两个队列，前者优先级高于后者
