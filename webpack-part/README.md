@@ -1,66 +1,37 @@
 # webpack
 
-### 浏览器兼容性
+## 如何在浏览器中实现模块化
 
-webpack支持所有符合es5标准的浏览器(不支持ie8以下的版本).webpack的import和require.ensure需要Promise,如果你想要支持旧版本浏览器,在使用这些表达式之前,还需要提前加载polyfil
+每个js文件 浏览器内都会进行一次请求 工程如果庞大的话会导致加载更多的js文件
 
-### 环境
+问题：
+- 效率问题：精细的模块划分带来了更多的js文件，更多的js文件带来了更多的请求，降低了页面访问效率
+- 兼容性问题：浏览器目前仅支持es6的模块化标准，并且还存在兼容性问题
+- 工具问题：浏览器不支持npm下载的第三方包
 
-Webpack 5 运行于 Node.js v10.13.0+ 的版本。
+原因：在浏览器端，开发时和运行时的侧重点不一样
+开发时：
+
+1. 模块划分越细越好
+2. 支持多种模块化标准
+3. 支持npm或其他包管理器下载的模块
+4. 能够解决其他工程化的问题
+
+运行时：
+
+1. 文件越少越好
+2. 文件体积越小越好
+3. 代码内容越乱越好
+4. 所有浏览器都要兼容
+5. 能够解决其他运行时的问题，主要是执行效率问题
+
+
+解决方法：
+既然开发时态和运行时态面临的局面有巨大的差异，因此，我们需要有一个工具，这个工具能够让开发者专心的在开发时态写代码，
+然后利用这个工具将开发时态编写的代码转换为运行时态需要的东西。
 
 ---
 
-### loader
+## 模块化兼容性 
 
-> 用于对模块的源代码进行转换，loader可以使你在import或load模块时预处理文件
-
-#### 使用loader
-
-1. 配置方式：在webpack.config.js文件中指定loader
-
-  ```js
-    // 执行顺序从右到左，从下到上
-    module.exports = {
-      module: {
-        rules: [
-          {
-            test: /\.css$/,
-            use: [
-              { loader: 'style-loader' },
-              {
-                loader: 'css-loader',
-                options: {
-                  modules: true,
-                },
-              },
-              { loader: 'sass-loader' },
-            ],
-          },
-        ],
-      },
-    };
-  ```
-2. [内联方式](https://webpack.docschina.org/concepts/loaders/#inline)：在每个import语句中显示指定loader
-
-#### loader特性
-
-- 支持链式调用，链中的每个loader会将转换应用在已处理过的资源上。一组链式的loader将按照相反顺序执行。上一个loader将其处理后的结果传递给下一个loader
-- 可以是同步的，也可以是异步的
-- 运行在nodejs中，并且能够执行任何操作
-- 可以通过options对象配置
-- 除了常见的通过package.json的main来将一个npm模块导出为loader，还可以在module.rules中使用loader字段直接引用一个模块
-- 插件（plugin）可以为loader带来更多特性
-- loader能够产生额外的任意文件
-
-可以通过loader的预处理函数，为js生态提供更多能力
-
-[编写一个loader](https://webpack.docschina.org/contribute/writing-a-loader/)
-
-### plugin
-
-> 一个具有apply方法的js对象，apply方法会被webpack compiler调用，并且在整个编译生命周期都可以访问compiler对象
-
-### Configuration
-
->
-
+commonjs和es6可以相互导出 导入
