@@ -1,0 +1,21 @@
+{
+  "name": "webpack-part",
+  "version": "1.0.0",
+  "description": "每个js文件 浏览器内都会进行一次请求 工程如果庞大的话会导致加载更多的js文件",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack",
+    "build": "webpack --env prod"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "jquery": "^3.7.1"
+  },
+  "devDependencies": {
+    "loader-utils": "^3.2.1",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
+  }
+}

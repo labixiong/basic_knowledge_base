@@ -1,11 +1,11 @@
 {
-  "name": "webpack-part",
+  "name": "using-extend",
   "version": "1.0.0",
   "description": "每个js文件 浏览器内都会进行一次请求 工程如果庞大的话会导致加载更多的js文件",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack --mode=development --watch",
-    "build": "webpack --mode=production"
+    "dev": "webpack",
+    "build": "webpack --env prod"
   },
   "keywords": [],
   "author": "",
@@ -14,8 +14,12 @@
     "jquery": "^3.7.1"
   },
   "devDependencies": {
+    "clean-webpack-plugin": "^4.0.0",
+    "copy-webpack-plugin": "^11.0.0",
+    "html-webpack-plugin": "^5.5.3",
     "loader-utils": "^3.2.1",
     "webpack": "^5.88.2",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
   }
 }

@@ -1,4 +1,5 @@
 const path = require('path')
+const FileListPlugin = require('./src/plugins/FileListPlugin')
 
 module.exports = {
   mode: 'development',
@@ -59,5 +60,8 @@ module.exports = {
         ]
       }
     ]
-  }
+  },
+  plugins: [
+    new FileListPlugin('fileList.md')
+  ]
 }
