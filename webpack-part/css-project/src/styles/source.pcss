@@ -1,0 +1,36 @@
+.main {
+  color: red;
+}
+
+
+/* 
+  在:root{}中定义常用变量，使用--前缀命名变量
+  编译后，仍然可以看到原语法，因为某些新语法的存在并不会影响浏览器的渲染，
+  尽管浏览器可能不认识 如果不希望在结果中看到新语法，可以配置postcss-preset-env的preserve为false
+*/
+
+:root{
+  --lightColor: #ddd;
+  --darkColor: #333;
+}
+
+a{
+  color: var(--lightColor);
+  background: var(--darkColor);
+}
+
+/* 自定义选择器 */
+@custom-selector :--heading h1, h2, h3, h4, h5, h6;
+@custom-selector :--enter :focus,:hover;
+
+a:--enter{
+    color: #f40;
+}
+
+:--heading{
+    font-weight:bold;
+}
+
+:--heading.active{
+    font-weight:bold;
+}

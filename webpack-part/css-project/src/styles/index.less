@@ -1,0 +1,92 @@
+// 导入
+@import './colors.less';
+
+.test {
+  color: @danger;
+}
+
+@red: #f40;
+
+.redColor {
+  color: @red;
+}
+
+// 变量
+@width: 10px;
+@height: @width + 10px;
+
+#header {
+  width: @width;
+  height: @height;
+}
+
+// 混合
+// 类似于函数使用方式，可以给参数，也可以给默认值
+.bordered(@type: dotted) {
+  border-top: @type 1px black;
+}
+
+#menu a {
+  color: #111;
+  .bordered(dotted);
+}
+
+.post a {
+  color: red;
+  .bordered(dashed);
+}
+
+// 嵌套
+#header {
+  &::before {
+    content: '';
+    display: block;
+  }
+
+  &::after {
+    content: ''
+  }
+
+  >.navigation {
+    font-size: 12px;
+
+    .abc {
+      color: red;
+    }
+  }
+
+  .logo {
+    width: 300px;
+  }
+}
+
+// 运算
+#header {
+  width: @width * 2;
+}
+
+// 函数
+@some: foo;
+
+div {
+  margin: if((2 > 1), 0, 3px);
+  color: if((iscolor(@some)), @some, black);
+}
+
+@primary: #f40;
+
+.b1 {
+  background: darken(@primary, 20%);
+}
+
+.b2 {
+  background: darken(@primary, 40%);
+}
+
+// 作用域 - 就近原则
+
+// 注释
+// 单行注释 less内部用,编译后不显示  双斜杠
+/*
+  多行注释  css原生注释  会出现在编译结果中
+*/

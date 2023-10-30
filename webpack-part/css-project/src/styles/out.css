@@ -1,0 +1,69 @@
+.main {
+  color: red;
+}
+
+
+/* 
+  在:root{}中定义常用变量，使用--前缀命名变量
+  编译后，仍然可以看到原语法，因为某些新语法的存在并不会影响浏览器的渲染，
+  尽管浏览器可能不认识 如果不希望在结果中看到新语法，可以配置postcss-preset-env的preserve为false
+*/
+
+:root {
+  --lightColor: #ddd;
+  --darkColor: #333;
+}
+
+a {
+  color: #ddd;
+  color: var(--lightColor);
+  background: #333;
+  background: var(--darkColor);
+}
+
+/* 自定义选择器 */
+/* 
+  下方代码编译后结果：
+  a:focus,a:hover{
+    color: #f40;
+  }
+
+  h1,h2,h3,h4,h5,h6{
+      font-weight:bold;
+  }
+
+  h1.active,h2.active,h3.active,h4.active,h5.active,h6.active{
+      font-weight:bold;
+  }
+*/
+@custom-selector :--heading h1, h2, h3, h4, h5, h6;
+@custom-selector :--enter :focus, :hover;
+
+a:--enter {
+  color: #f40;
+}
+
+:--heading {
+  font-weight: bold;
+}
+
+:--heading.active {
+  font-weight: bold;
+}
+
+/* 与LESS相同，只不过嵌套的选择器前必须使用符号& */
+.a {
+  color: red;
+
+  & .b {
+    color: green;
+  }
+
+  &>.b {
+    color: blue;
+  }
+
+  &:hover {
+    color: #000;
+  }
+}
