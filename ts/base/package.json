@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "dev": "nodemon --watch src -e ts --exec ts-node src/index.ts",
+    "build": "rd /s /q dist & tsc"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.9"
+  },
+  "dependencies": {
+    "ts-node": "^10.9.1"
+  }
+}
