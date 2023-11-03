@@ -80,14 +80,14 @@ interface User {
   sayHello: () => void
 }
 
-let u: User = {
-  id: 'ewfsg',
-  name: 'zs',
-  age: 18,
-  sayHello: function () {
-    console.log(this.name);
-  }
-}
+// let u: User = {
+//   id: 'ewfsg',
+//   name: 'zs',
+//   age: 18,
+//   sayHello: function () {
+//     console.log(this.name);
+//   }
+// }
 
 
 
