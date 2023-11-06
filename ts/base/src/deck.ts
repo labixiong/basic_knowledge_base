@@ -125,7 +125,7 @@ export class Deck {
    */
   private getRandom(min: number, max: number) {
     const dec = max - min
-    return Math.floor(Math.random() * dec + min)
+    return Math.floor(Math.random() * dec + max)
   }
 
 }
