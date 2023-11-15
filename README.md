@@ -1,9 +1,501 @@
-# basic_knowledge_base
+# react-part
 
-重过程，轻目标
+## 介绍
 
-重大局，轻细节
+> 声明式、组件化一次学习、跨平台编写
+> 单向数据流、虚拟DOM、diff算法
 
-重基础，轻上层
+React 起源于 Facebook 的内部项目，因为该公司对市场上所有 JavaScript MVC 框架都不满意，就决定自己写一套，用来架设 Instagram 的网站。
 
-重实践，轻理论
+下面介绍一下 *React* 几个重要版本的重大更新：
+
+- *React 16* :出现了 *Fiber*，整个更新变的可中断、可分片、具有优先级
+- *React 16.8*：推出了 *Hooks*，标志着从类组件正式转为函数组件
+- *React 17*：过渡版本，没有添加任何面向开发人员的新功能。而主要侧重于**升级简化 *React* 本身**。
+- *React 18*
+  - *transition*
+  - *Suspense*
+  - 新的 *Hooks*
+  - *Offscreen*
+  - ......
+
+## JSX基本语法
+
+并不是html元素，实际是一个js对象
+
+使用 *JSX* 来描述页面时，有如下的一些语法规则：
+
+- 根元素只能有一个
+- *JSX* 中使用 *JavaScript* 表达式。表达式写在花括号 *{}* 中
+- 属性值指定为字符串字面量，或者在属性值中插入一个 *JavaScript* 表达式
+- *style* 对应样式对象，*class* 要写作 *className*
+- 注释需要写在花括号
+- *JSX* 允许在模板中插入数组，数组会自动展开所有成员
+
+*createElement* 方法
+
+*JSX* 是一种 *JavaScript* 的语法扩展，*Babel* 会把 *JSX* 转译成一个名为 *React.createElement* 函数调用。
+
+
+## 组件与事件绑定
+
+组件有两种写法：函数组件和类组件（继承React.Component）
+
+事件绑定：
+
+```js
+export default function App() {
+  function clickHandle(e) {
+    // e为封装后的事件对象SyntheticBaseEvent
+    console.log(e);
+
+    // nativeEvent为原生事件对象
+    console.log(e.nativeEvent);
+  }
+
+  return (
+    <div>
+      <button onClick={clickHandle}>点击</button>
+    </div>
+  )
+}
+```
+
+阻止表单的默认提交行为：
+
+通过时间对象来阻止默认行为 `e.preventDefault()`
+
+this的指向：如果直接调用函数那么会造成函数内部的this为undefined
+
+三种解决方式：
+- 把事件处理函数定义为箭头函数
+- 将事件绑定修改为箭头函数
+- 通过bind来改变this指向
+
+## 组件状态和数据传递
+
+### 组件状态
+```js
+export default class App extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      num: 1
+    }
+  }
+
+  clickHandle = () => {
+    console.log(this);
+
+    /**
+     * 虽然写了三次，但是并没有加三次，因为react出于性能考虑会将多个setState进行合并
+     */
+    this.setState({
+      num: this.state.num + 1
+    })
+    this.setState({
+      num: this.state.num + 1
+    })
+    this.setState({
+      num: this.state.num + 1
+    })
+
+    /**
+     * setState它对状态的改变可能是异步的
+     * 
+     * 如果改变状态的代码处于HTML元素的事件中，则其是异步的，否则就是同步的
+     * 
+     * 这也就是下方输出为1的原因
+     */
+    console.log(this.state.num); // 1
+  }
+
+  render() {
+    return (
+      <div>
+        <div>{this.state.num}</div>
+        <button onClick={this.clickHandle}>点击+1</button>
+      </div>
+    )
+  }
+}
+```
+
+如果在事件处理函数里面想拿到 setState 执行后的数据，可以提前使用一个变量来存储计算结果，或者使用 setState 的第二个参数，它是一个函数，这个函数会在 state 更新后被调用。
+
+```js
+// 1. 使用变量存储
+clickHandle = () => {
+  let num = this.state.num + 1
+  this.setState({
+    num
+  })
+  console.log(num); // 2
+}
+
+// 2. setState提供了第二个参数，是一个回调函数，在回调函数中能拿到最新的结果
+clickHandle = () => {
+  this.setState({
+    num: this.state.num + 1
+  }, () => {
+    console.log(this.state.num)
+  })
+}
+```
+
+最佳实践：
+1. 把所有的 setState 当作是异步的
+2. 永远不要相信setState调用之后的状态
+3. 如果要使用改变之后的状态，需要使用回调函数（setState的第二个参数）
+4. 如果新的状态要根据之前的状态进行计算，使用函数的方式改变状态（setState的第一个参数）
+
+那么如何点一次按钮就实现改变状态三次呢？可以采用函数的方式
+
+```js
+clickHandle = () => {
+  // 参数cur就是当前的state，后面的函数式调用会等之前的结束后拿到最新的state再进行调用
+  this.setState((cur) => ({
+    num: cur.num + 1
+  }))
+  this.setState((cur) => ({
+    num: cur.num + 1
+  }))
+  this.setState((cur) => ({
+    num: cur.num + 1
+  }))
+}
+```
+
+### 数据传递
+
+1. 函数式组件
+
+通过参数传递，可以直接拿到父组件传递的数据
+
+```js
+
+// Hello.jsx
+import React from 'react'
+
+export default function Hello(props) {
+  return (
+    <>
+      <ul>
+        <li>姓名：{props.stuInfo.name}</li>
+        <li>年龄：{props.stuInfo.age}</li>
+      </ul>
+    </>
+  )
+}
+
+// App.jsx
+<Hello stuInfo={this.state}></Hello>
+```
+
+2. 类组件
+
+传递的数据会直接绑定到this的props属性中，直接使用即可
+
+```js
+// World.jsx
+import React, { Component } from 'react'
+
+export default class World extends Component {
+  render() {
+    return (
+      <>
+        <ul>
+          <li>姓名：{this.props.stuInfo.name}</li>
+          <li>年龄：{this.props.stuInfo.age}</li>
+        </ul>
+      </>
+    )
+  }
+}
+
+
+// App.jsx
+<World stuInfo={this.state}></World>
+```
+
+怎么对传入的props进行验证呢？
+
+1. 如果没有传入则设置默认值 defaultProps
+
+  ```jsx
+  // 无论是函数组件还是类组件都可以通过defaultProps属性来设置默认值
+  Hello.defaultProps = {
+    stuInfo: {
+      name: 'zs',
+      age: 18
+    }
+  }
+
+  // 类组件除了这种方式还可以通过设置静态属性来设置默认值
+  static defaultProps = {
+    stuInfo: {
+      name: 'zs',
+      age: 18
+    }
+  }
+  ```
+
+2. 如果传入了，验证一下是不是所需要的类型
+
+    自 React v15.5 起，React.PropTypes 已移入另一个包中。请使用 prop-types 库 代替。
+
+    首先要安装一下这个库，然后引入就可使用
+
+  ```jsx
+  // 组件中引入 
+  import PropTypes from 'prop-types'
+
+  // 通过对组件propTypes的属性进行类型约束
+  Hello.propTypes = {
+    stuInfo: PropTypes.object
+  }
+  ```
+
+通过props.children可以实现Vue中类似插槽的功能,例如子组件定义按钮
+
+```js
+// Button.jsx
+import React from 'react'
+
+export default function Button(props) {
+  return (
+    <div>
+      <button>{props.children}</button>
+    </div>
+  )
+}
+
+// App.jsx
+<Button>添加按钮</Button>
+```
+
+
+### 状态提升
+
+在 Vue 中，父传子通过 props，子传父通过触发自定义事件。
+
+在 React 中，如果子组件需要向父组件传递数据，同样是通过触发父组件传递给子组件的事件来进行传递。
+
+
+```js
+/**
+ * 汇率案例 - 理解状态提升
+ */
+// 父组件
+import React, { Component } from 'react'
+import Money from './components/Money'
+
+export default class App extends Component {
+  state = {
+    dollar: "",
+    rmb: ""
+  }
+
+  transformToRMB = (value) => {
+    if(parseFloat(value) || value === "" || parseFloat(value) === 0) {
+      this.setState({
+        dollar: value,
+        rmb: value === "" ? "" : (value * 7.3255).toFixed(2)
+      })
+    } else {
+      alert('请输入数字')
+    }
+  }
+
+  // 子组件传递过来值由父组件处理
+  transformToDollar = (value) => { 
+    if(parseFloat(value) || value === "" || parseFloat(value) === 0) {
+      this.setState({
+        dollar: value === "" ? "" : (value * 0.1365).toFixed(2),
+        rmb: value
+      })
+    } else {
+      alert('请输入数字')
+    } 
+  }
+
+  render() {
+    return (
+      <div>
+        <Money text="美元" money={this.state.dollar} transform={this.transformToRMB}></Money>
+        <Money text="人民币" money={this.state.rmb} transform={this.transformToDollar}></Money>
+      </div>
+    )
+  }
+}
+
+// 子组件
+import React from 'react'
+
+export default function Money(props) {
+
+  function handleInputChange(e) {
+    // 将用户输入的值传递给父组件，让父组件进行修改
+    props.transform(e.target.value)
+  }
+
+  return (
+    <div>
+      <fieldset>
+        <legend>{props.text}</legend>
+        <input type="text" value={props.money} onChange={handleInputChange} />
+      </fieldset>
+    </div>
+  )
+}
+```
+
+## 表单
+
+受控组件，表单控件和state绑定，通过change事件进行改变值
+
+```jsx
+import React, { Component } from 'react'
+
+export default class App extends Component {
+  state = {
+    value: ''
+  }
+
+  // 当文本框内容发生变化，去改变state状态
+  handleChange(e) {
+    this.setState({
+      value: e.target.value
+    })
+  }
+
+  handleClick = () => {
+    console.log(`你要提交的内容为：${this.state.value}`);
+  }
+
+  render() {
+    return (
+      <div>
+        {/* 表单控件绑定的值为state中的值 */}
+        <textarea name="three" id="" cols="30" rows="10" value={this.state.value} onChange={this.handleChange}></textarea>
+        <button onClick={this.handleClick}>提交</button>
+      </div>
+    ) 
+  }
+}
+
+```
+
+非受控组件
+
+基本示例:
+
+```jsx
+import React, { Component } from 'react'
+
+export default class App extends Component {
+
+  constructor() {
+    super();
+
+    // 创建一个ref，用于和控件绑定
+    this.inputRef = React.createRef()
+  }
+
+  handleClick = () => {
+    // 绑定了ref之后就可以获得一个对象 { current: input }  current的值就是当前ref绑定的DOM节点
+    console.log(`你要提交的内容为：${this.inputRef.current.value}`);
+  }
+
+  render() {
+    return (
+      <div>
+
+        {/* 非受控组件示例,输入框不能给value属性，如果给value属性值的话，React会认为这是一个受控组件 */}
+        {/* 如果想要给默认值,可以使用defaultValue属性 */}
+        <input type="text" ref={this.inputRef} />
+        <button onClick={this.handleClick}>提交</button>
+      </div>
+    )
+  }
+}
+
+```
+
+文件上传
+
+```jsx
+import React, { Component } from 'react'
+
+export default class App extends Component {
+
+  constructor() {
+    super();
+
+    // 创建一个ref，用于和控件绑定
+    this.uploadRef = React.createRef()
+  }
+
+  handleClick = () => {
+    // 绑定了ref之后就可以获得一个对象 { current: input }  current的值就是当前ref绑定的DOM节点
+    console.log(`你要提交的内容为：${this.uploadRef.current.files[0].name}`);
+  }
+
+  render() {
+    return (
+      <div>
+
+        {/* 非受控组件示例,输入框不能给value属性，如果给value属性值的话，React会认为这是一个受控组件 */}
+        {/* 如果想要给默认值,可以使用defaultValue属性 */}
+        <input type="file" ref={this.uploadRef} />
+        <button onClick={this.handleClick}>提交</button>
+      </div>
+    )
+  }
+}
+```
+
+
+## 生命周期
+
+常用的生命周期钩子函数如下:
+
+- constructor
+    - 同一个组件对象只会创建一次
+    - 不能在第一次挂载到页面之前,调用setState,为了避免问题,构造函数中严禁使用setState
+
+- render
+    - render 是整个类组件中必须要书写的生命周期方法
+    - 返回一个虚拟 DOM，会被挂载到虚拟 DOM 树中，最终渲染到页面的真实 DOM 中
+    - render 可能不只运行一次，只要需要重新渲染，就会重新运行
+    - 严禁使用 setState，因为可能会导致无限递归渲染
+
+- componentDidMount
+    - 会在组件挂载后(插入DOM树中),立即调用. 依赖于DOM节点的初始化应该放在这里。如需通过网络请求获取数据，此处是实例化请求的好地方
+    - 类似于Vue中的mounted，可以在里面使用setState
+
+- componentDidUpdate 更新的时候调用 首次渲染不会触发
+- componentWillUnmount 组件销毁前触发
+
+
+## Hooks
+
+### 基本介绍
+
+React v16.8新增特性，可以让你在不编写class的情况下使用state以及其他的React特性
+
+解决以下问题：
+
+- 告别令人疑惑的生命周期
+
+    如果需要在挂载时就需要做一些事，而且更新后还要做这些事，那么就会造成书写大量的代码
+
+- 告别this
+
+    
+
+### useState
+
+### useEffect
+
+### 自定义Hooks
