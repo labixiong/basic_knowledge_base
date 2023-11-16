@@ -1,31 +1,38 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
+import useBook from './hooks/useBook'
 
-export default class App extends Component {
-  constructor() {
-    // 构造器,主要做一些初始化操作
-    super()
-    this.state = {
+export default function App() {
+  let [count, setCount] = useState(0)
+  let [count1, setCount1] = useState(0)
+  let [count2, setCount2] = useState(0)
+  let {book, setBook} = useBook()
+  let [value, setValue] = useState()
 
-    }
+  useEffect(() => {
+    console.log('执行副作用函数');
+  }, [count])
+
+  function handleChange(e) {
+    setValue(e.target.value)
   }
 
-  // 会在组件挂载后(插入DOM树中),立即调用.
-  // 依赖于DOM节点的初始化应该放在这里。如需通过网络请求获取数据，此处是实例化请求的好地方
-  componentDidMount() {
-    console.log('mount');
+  function handleClick() {
+    setBook(value)
   }
 
-  // 销毁组件时触发
-  componentWillUnmount() {}
+  return (
+    <div>
+      <div>{count}</div>
+      <div>{count1}</div>
+      <div>{count2}</div>
+      <button onClick={() => setCount(++count)}>+1</button>
+      <button onClick={() => setCount1(++count1)}>+1</button>
+      <button onClick={() => setCount2(++count2)}>+1</button>
 
-  // 更新的时候立即调用
-  componentDidUpdate() {}
-
-  render() {
-    return (
-      <div>
-        
-      </div>
-    )
-  }
+      {/* 自定义hook测试 */}
+      <div>{book}</div>
+      <input type="text" value={value} onChange={handleChange} />
+      <button onClick={handleClick}>确定</button>
+    </div>
+  )
 }

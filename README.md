@@ -482,6 +482,8 @@ export default class App extends Component {
 
 ### 基本介绍
 
+> [面向对象和函数式编程的区别](https://www.imaginarycloud.com/blog/functional-programming-vs-oop/)
+
 React v16.8新增特性，可以让你在不编写class的情况下使用state以及其他的React特性
 
 解决以下问题：
@@ -491,11 +493,198 @@ React v16.8新增特性，可以让你在不编写class的情况下使用state�
     如果需要在挂载时就需要做一些事，而且更新后还要做这些事，那么就会造成书写大量的代码
 
 - 告别this
+- 告别繁重的类组件，回归前端程序员更加熟悉的函数
 
-    
+
+HOOK实际就是js函数，使用规则：
+
+1. 只能在函数最外层调用 Hook。不要在循环、条件判断或者子函数中调用。
+2. 只能在 React 的函数组件中调用 Hook。不要在其他 JavaScript 函数中调用。
+
+两个常用的HOOK举例介绍
 
 ### useState
 
+> 为函数式组件添加状态
+
+- 基本使用
+
+```js
+import React, { useState } from 'react'
+
+export default function App() {
+
+  let [count, setCount] = useState(0)
+
+  function clickHandle() {
+    setCount(++count)
+  }
+
+  return (
+    <div>
+      <div>你点击了{count}次</div>
+      <button onClick={clickHandle}>+1</button>
+    </div>
+  )
+}
+
+```
+
+- 定义多个
+
+```js
+import React, { useState } from 'react'
+
+export default function App() {
+
+  let [count, setCount] = useState(0) 
+  let [age, setAge] = useState(18)
+  let [fruit, setFruit] = useState('banana')
+  let [todos, setTodos] = useState([{ text: '学习HOOK' }])
+
+  function clickHandle() {
+    setCount(++count)
+  }
+
+  return (
+    <div>
+      <div>你点击了{count}次</div>
+      <div>年龄：{age}</div>
+      <div>水果：{fruit}</div>
+      <div>待办事项：{todos[0].text}</div>
+      <button onClick={clickHandle}>+1</button>
+    </div>
+  )
+}
+
+```
+
 ### useEffect
 
-### 自定义Hooks
+> 处理函数副作用
+
+- 副作用的概念
+
+    - 纯函数：一个确切的参数在你的函数中运行后，一定能得到一个确切的值，例如下面的例子：
+
+      ```js
+      function test(x) {
+        return x * 2
+      }
+
+      test(2) // 4
+      test(3) // 6
+      ```
+    - 如果一个函数中，存在副作用，那么我们就称该函数不是一个纯函数，所谓副作用，就是指函数的结果是不可控，不可预期。
+    - 常见的副作用有发送网络请求、添加一些监听的注册和取消注册，手动修改 DOM，以前我们是将这些副作用写在生命周期钩子函数里面，现在就可以书写在 useEffect 这个 Hook 里面
+
+- 基本使用
+
+```js
+import React, { useState, useEffect } from 'react'
+
+export default function App() {
+
+  let [count, setCount] = useState(0)
+
+  useEffect(() => {
+    // 书写你要执行的副作用，会在组件渲染完成后执行
+    // 第一次会执行，更新后也会执行
+    document.title = `你点击了${count}次`
+  })
+
+  function clickHandle() {
+    setCount(++count)
+  }
+
+  return (
+    <div>
+      <div>你点击了{count}次</div>
+      <button onClick={clickHandle}>+1</button>
+    </div>
+  )
+}
+
+```
+
+- 执行清理工作
+
+```js
+import React, { useState, useEffect } from 'react'
+
+export default function App() {
+
+  let [count, setCount] = useState(0)
+
+  useEffect(() => {
+    // 每隔一秒输出Hello，但是当点击了多次按钮之后会快速输出多个Hello
+    // 这时候就需要返回一个函数，函数的执行顺序在useEffect内部代码块执行之前执行
+    const timer = setInterval(() => {
+      console.log('Hello');
+    }, 1000)
+
+    return () => {
+      clearInterval(timer)
+    }
+  })
+
+  function clickHandle() {
+    setCount(++count)
+  }
+
+  return (
+    <div>
+      <div>你点击了{count}次</div>
+      <button onClick={clickHandle}>+1</button>
+    </div>
+  )
+}
+
+```
+
+- 副作用的依赖
+
+```jsx
+// 目前，我们的副作用函数，每次重新渲染后都会重新执行，有些时候我们是需要设置依赖项，传递第二个参数（一个依赖项数组）
+import React, { useState, useEffect } from 'react'
+
+export default function App() {
+
+  let [count, setCount] = useState(0)
+  let [count1, setCount1] = useState(0)
+  let [count2, setCount2] = useState(0)
+
+  useEffect(() => {
+    // 这样的话就只在count改变时才会执行副作用函数，count1、count2则不会执行此函数
+    console.log('执行副作用函数');
+  }, [count])
+
+  return (
+    <div>
+      <div>{count}</div>
+      <div>{count1}</div>
+      <div>{count2}</div>
+      <button onClick={() => setCount(++count)}>+1</button>
+      <button onClick={() => setCount1(++count1)}>+1</button>
+      <button onClick={() => setCount2(++count2)}>+1</button>
+    </div>
+  )
+}
+
+// 如果想要副作用只执行一次,那么第二个参数传递一个空数组即可
+useEffect(() => {
+  console.log('执行副作用函数');
+}, [])
+
+```
+
+### 自定义Hook
+
+本质就是普通函数,但还是会有一些区别
+
+- 自定义Hook能够用诸如useState/useRef等,普通函数则不能.由此可以通过内置的Hooks获得Fiber的访问方式,可以实现在组件级别存储数据的方案等
+- 自定义Hooks需要以use开头,普通函数没有这个限制.使用use开头并不是一个语法或者一个强制性的方案,更像是一个约定
+
+React内部区分函数和自定义Hook的主要依据就是内部是否使用了React的Hook
+
+
