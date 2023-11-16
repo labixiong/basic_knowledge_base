@@ -2,9 +2,6 @@
 
 # dependencies
 /node_modules
-/app/node_modules
-/student-manage/server/node_modules
-/student-manage/front/node_modules
 /.pnp
 .pnp.js
 
