@@ -2,22 +2,42 @@ import { useState, useEffect } from 'react';
 import { getStuListApi } from "../api/index"
 import Alert from './Alert';
 import { useLocation, NavLink } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import { getStuListAsync } from '../store/stuSlice'
+
 
 function Home(props) {
 
-    const [stuList, setStuList] = useState([]); // 存储全部的数据
+    // const [stuList, setStuList] = useState([]); // 存储全部的数据
+
+		// 从仓库中获取数据,放弃组件内维护stuList数据
+		const { stuList } = useSelector((state) => state.stu)
+
+
     const [searchItem, setSearchItem] = useState("");
 		const [alert, setAlert] = useState(null)
 		const [searchList, setSearchList] = useState([]) // 存储搜索后的数据
 
 		const location = useLocation()
+		const dispatch = useDispatch()
 
+		
     // 注意，这里需要添加依赖性为空数组，代表只执行一次
     useEffect(() => {
-        getStuListApi().then(({ data }) => {
-            setStuList(data);
-        });
-    }, []);
+			// 之前的方式在副作用hook里发送请求
+			// getStuListApi().then(({ data }) => {
+			// 	setStuList(data);
+			// });
+
+			// 现在从仓库中获取数据
+			if(!stuList.length) {
+				// 如果没有数据,应该发送请求获取数据
+				// 但是也不是在这里直接发请求,而不是应该派发一个action到仓库,由仓库负责发送异步请求获取数据,然后填充到仓库里
+				dispatch(getStuListAsync())
+			}
+    }, [stuList, dispatch]);
+
+		// 现修改为从store中获取数据
 
 		// 用于跳转到Home组件时所传递的state数据
 		useEffect(() => {

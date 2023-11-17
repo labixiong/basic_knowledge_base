@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { addStuApi, getStuByIdApi, editStuByIdApi } from '../api/index'
+// import { addStuApi, getStuByIdApi, editStuByIdApi } from '../api/index'
 import { useNavigate, useParams } from 'react-router-dom'
+import { addStuAsync, editStuByIdAsync } from '../store/stuSlice'
+import { useDispatch, useSelector } from 'react-redux'
 
 function Operation(props) {
 
@@ -15,16 +17,21 @@ function Operation(props) {
 		profile: ""
 	})
 
+	const dispatch = useDispatch()
+	const { stuList } = useSelector(state => state.stu)
+
 	const navigate = useNavigate();
 	const { id } = useParams()
 
 	useEffect(() => {
 		if(id) {
-			getStuByIdApi(id).then(({ data }) => {
-				setStu(data)
-			})
+			// getStuByIdApi(id).then(({ data }) => {
+			// 	setStu(data)
+			// })
+			const curStu = stuList.filter(stu => stu.id === ~~id)
+   		setStu(curStu[0])
 		}
-	}, [id])
+	}, [id, stuList])
 
 	// 根据对应的key来更新信息
 	function updateStuInfo(newInfo, key) {
@@ -50,23 +57,38 @@ function Operation(props) {
 		}
 
 		if(id) {
-			editStuByIdApi(id, stu).then(()=>{
-				navigate("/home", {
-					state: {
-						alert: "学生修改成功",
-						type: "info",
-					}
-				});
-			})
+			// editStuByIdApi(id, stu).then(()=>{
+			// 	navigate("/home", {
+			// 		state: {
+			// 			alert: "学生修改成功",
+			// 			type: "info",
+			// 		}
+			// 	});
+			// })
+
+			dispatch(editStuByIdAsync({ id, stu }))
+			navigate("/home", {
+				state: {
+					alert: "学生修改成功",
+					type: "info",
+				}
+			});
 		} else {
-			addStuApi(stu).then(({ data }) => {
-				navigate('/home', {
-					state: {
-						alert: '用户添加成功',
-						type: 'success',
-	
-					}
-				})
+			// addStuApi(stu).then(({ data }) => {
+			// 	navigate('/home', {
+			// 		state: {
+			// 			alert: '用户添加成功',
+			// 			type: 'success',
+			// 		}
+			// 	})
+			// })
+
+			dispatch(addStuAsync(stu))
+			navigate('/home', {
+				state: {
+					alert: '用户添加成功',
+					type: 'success',
+				}
 			})
 		}
 	}

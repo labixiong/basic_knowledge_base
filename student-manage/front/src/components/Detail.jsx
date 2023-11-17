@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { getStuByIdApi, deleteStuByIdApi } from '../api/index'
+import { useSelector, useDispatch } from 'react-redux'
+import { delStuByIdAsync } from '../store/stuSlice'
 
 export default function Detail() {
   // 获取动态参数
   const { id } = useParams()
 
   const navigate = useNavigate()
+
+  const { stuList } = useSelector(state => state.stu)
+  const dispatch = useDispatch()
 
   const [stu, setStu] = useState({
 		name: "",
@@ -20,21 +24,33 @@ export default function Detail() {
 	})
 
   useEffect(() => {
-    getStuByIdApi(id).then(({ data }) => {
-      setStu(data)
-    })
-  }, [id])
+    // getStuByIdApi(id).then(({ data }) => {
+    //   setStu(data)
+    // })
+
+    const curStu = stuList.filter(stu => stu.id === ~~id)
+    setStu(curStu[0])
+  }, [id, stuList])
 
 
   function deleteStu(id) {
     if(window.confirm('你是否要删除此学生？')) {
-      deleteStuByIdApi(id).then(() => {
-        navigate('/home', {
-          state: {
-            alert: '学生删除成功',
-            type: 'info'
-          }
-        })
+      // deleteStuByIdApi(id).then(() => {
+      //   navigate('/home', {
+      //     state: {
+      //       alert: '学生删除成功',
+      //       type: 'info'
+      //     }
+      //   })
+      // })
+
+      // 派发一个action,仓库来异步请求进行删除,然后仓库再更新自己的数据
+      dispatch(delStuByIdAsync(id))
+      navigate("/home", {
+        state: {
+          alert: "学生删除成功",
+          type: "info"
+        }
       })
     }
   }
