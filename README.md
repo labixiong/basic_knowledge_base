@@ -773,7 +773,100 @@ export default Router;
 
 之后，使用 Outlet 组件，该组件表示匹配上的子路由组件渲染的位置。
 
-## react-redux
+## redux
 
 ### 状态管理
+
+所谓状态管理，指的是**把组件之间需要共享的状态抽取出来，遵循特定的约定，统一来管理，让状态的变化可以预测**。
+
+### 核心思想
+
+早期的时候，*React* 官方提供了 *Flux*，*Flux* 的特点如下：
+
+- 单向数据流。视图事件或者外部测试用例发出 *Action* ，经由 *Dispatcher* 派发给 *Store* ，*Store* 会触发相应的方法更新数据、更新视图
+- **Store 可以有多个**
+- **Store 不仅存放数据，还封装了处理数据的方法**
+
+*2015* 年的时候，*Dan Abramov* 推出的 *Redux* 席卷了整个 *React* 社区，*Redux* 本质就是在 *Flux* 上做了一些更新：
+
+- **单向数据流**。*View* 发出 *Action* (`store.dispatch(action)`)，*Store* 调用 *Reducer* 计算出新的 *state* ，若 *state* 产生变化，则调用监听函数重新渲染 View （`store.subscribe(render)`）
+
+- **单一数据源**，只有一个 *Store*
+
+- *state* 是只读的，每次状态更新之后只能返回一个新的 *state*
+
+- 没有 *Dispatcher* ，而是在 *Store* 中集成了 *dispatch* 方法，**`store.dispatch()` 是 *View* 发出 *Action* 的唯一途径**
+
+- 支持使用中间件（*Middleware*）管理异步数据流
+
+- 获取仓库： store.getState()
+- 派发action：store.dispatch(action object)
+- 订阅：store.subscribe()
+
+
+## react-redux
+
+*Redux* 是一个独立的第三方库，之后 *React* 官方在 *Redux* 的基础上推出了 *React-redux*：*https://react-redux.js.org/*
+
+最新版的 *React-redux*，已经全面拥抱了 *Hooks*，内置了诸如：
+
+- *useSelector*
+- *useDispatch*
+- *useStore*
+
+另外，*Redux* 官方还推出了 *Redux Toolkit*，来简化整个 *Redux* 的使用。官方文档：*https://redux-toolkit.js.org/*
+
+因此现在在 *React* 应用中，状态管理库的使用一般都是 *React-redux + Redux Toolkit*
+
+index.js 的变化，需要从 react-redux 中引入 *Provider* 的组件，用于提供一个上下文环境，包裹应用的根组件，之后仓库会做为 *Provider* 的 store 属性，不需要再在 App.jsx 根组件上面挂载了
+
+```js
+// ....
+import { Provider } from "react-redux";
+
+// 引入仓库
+import store from "./redux/store";
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+
+root.render(
+  <Provider store={store}>
+    <App />
+  </Provider>
+);
+```
+
+store.js 的变化，从 *toolkit* 里面引入 *configureStore* 方法，用于创建我们的数据仓库
+
+```js
+// 引入创建仓库的方法
+import { configureStore } from "@reduxjs/toolkit";
+
+// 调用该方法时，传入一个配置对象
+// 其中一个选项是配置 reducer
+export default configureStore({
+    reducer : {
+
+    }
+});
+
+```
+
+组件连接仓库的改变，之前使用 redux 的时候，组件还是需要从父组件传递的 props 上面拿到仓库数据，现在可以通过 useSelector 这个 Hook 直接连接仓库
+
+```js
+const {list} = useSelector(state=>state.todo);
+```
+
+组件向仓库派发 action 时的改变，首先是获取 dispatch 方法的方式，之前使用纯 redux 的时候，dispatch 是通过 store 拿到的，现在是通过 useDispatch 来拿到。
+
+```js
+ dispatch(add(value));
+```
+
+action 之前是通过我们自己书写的 action creator 来创建的，现在是直接从 slice 里面导出即可。
+
+```js
+export const {add,del,change} = todolistSlice.actions;
+```
 
