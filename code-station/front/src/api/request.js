@@ -9,7 +9,10 @@ service.interceptors.request.use(
   (config) => {
     // 拦截到请求后，这里就可以做各种事情
     // 一般是添加 token
-
+    const token = localStorage.getItem("userToken");
+    if(token){
+      config.headers['Authorization'] = "Bearer " + token;
+    }
     // 请求放行
     return config;
   },

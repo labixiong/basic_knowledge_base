@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
-// import { addStuApi, getStuByIdApi, editStuByIdApi } from '../api/index'
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom'
 import { addStuAsync, editStuByIdAsync } from '../store/stuSlice'
 import { useDispatch, useSelector } from 'react-redux'
 
 function Operation(props) {
 
-	const [stu, setStu] = useState({
+	const initStu = useMemo(() => ({
 		name: "",
 		age: "",
 		phone: "",
@@ -15,7 +14,8 @@ function Operation(props) {
 		graduationschool: "",
 		profession: "",
 		profile: ""
-	})
+	}), [])
+	let [stu, setStu] = useState(initStu)
 
 	const dispatch = useDispatch()
 	const { stuList } = useSelector(state => state.stu)
@@ -25,13 +25,12 @@ function Operation(props) {
 
 	useEffect(() => {
 		if(id) {
-			// getStuByIdApi(id).then(({ data }) => {
-			// 	setStu(data)
-			// })
 			const curStu = stuList.filter(stu => stu.id === ~~id)
    		setStu(curStu[0])
+		} else {
+			setStu(initStu)
 		}
-	}, [id, stuList])
+	}, [id, stuList, initStu])
 
 	// 根据对应的key来更新信息
 	function updateStuInfo(newInfo, key) {
@@ -57,15 +56,6 @@ function Operation(props) {
 		}
 
 		if(id) {
-			// editStuByIdApi(id, stu).then(()=>{
-			// 	navigate("/home", {
-			// 		state: {
-			// 			alert: "学生修改成功",
-			// 			type: "info",
-			// 		}
-			// 	});
-			// })
-
 			dispatch(editStuByIdAsync({ id, stu }))
 			navigate("/home", {
 				state: {
@@ -74,15 +64,6 @@ function Operation(props) {
 				}
 			});
 		} else {
-			// addStuApi(stu).then(({ data }) => {
-			// 	navigate('/home', {
-			// 		state: {
-			// 			alert: '用户添加成功',
-			// 			type: 'success',
-			// 		}
-			// 	})
-			// })
-
 			dispatch(addStuAsync(stu))
 			navigate('/home', {
 				state: {
@@ -93,6 +74,63 @@ function Operation(props) {
 		}
 	}
 
+	let formItemArr = [
+		{ label: '姓名', type: 'input', placeholder: '请填写用户姓名', value: stu.name, event: (e) => updateStuInfo(e.target.value, 'name') },
+		{ label: '年龄', type: 'input', placeholder: '请填写用户年龄', value: stu.age, event: (e) => updateStuInfo(e.target.value, 'age') },
+		{ label: '电话', type: 'input', placeholder: '请填写用户电话号码', value: stu.phone, event: (e) => updateStuInfo(e.target.value, 'phone') },
+		{ label: '邮箱', type: 'input', placeholder: '请填写用户邮箱地址', value: stu.email, event: (e) => updateStuInfo(e.target.value, 'email') },
+		{
+			label: '学历',
+			type: 'select',
+			options: [{ title: '小学' }, { title: '初中或职中' }, { title: '高中或职高' }, { title: '专科' }, { title: '本科' }, { title: '硕士' }, { title: '博士' }],
+			placeholder: '',
+			value: stu.education,
+			event: (e) => updateStuInfo(e.target.value,'education')
+		},
+		{ label: '毕业学校', type: 'input', placeholder: '请填写用户毕业院校', value: stu.graduationschool, event: (e) => updateStuInfo(e.target.value, 'graduationschool') },
+		{ label: '职业', type: 'input', placeholder: '请填写用户从事的相关职业', value: stu.profession, event: (e) => updateStuInfo(e.target.value, 'profession') },
+		{ label: '个人简介', type: 'textarea', placeholder: '请简单的介绍一下你自己，包括兴趣、爱好等信息...', value: stu.profile, event: (e) => updateStuInfo(e.target.value, 'profile') }
+	]
+
+	let formList = formItemArr.map((f, i) => {
+		let container = null
+		if(f.type === 'textarea') {
+			container = (
+				<textarea
+					className="form-control"
+					rows="10"
+					placeholder={f.placeholder}
+					value={f.value}
+					onChange={(e) => f.event(e)}
+				></textarea>
+			)
+		} else if(f.type === 'select') {
+				let options = f.options.map(o => (<option key={o.title}>{o.title}</option>))
+				container = (
+					<select
+						className="form-control"
+						value={f.value}
+						onChange={(e) => f.event(e)}
+					>
+						{options}
+					</select>)
+		} else {
+			container = (
+				<input
+					type="text"
+					className="form-control"
+					placeholder={f.placeholder}
+					value={f.value}
+					onChange={(e) => f.event(e)}
+				/>)
+		}
+		return (
+		<div key={f.label} className="form-group">
+			<label>{f.label}</label>
+			{container}
+		</div>)
+	})
+
 	return (
 		<div>
 			<div className="container">
@@ -100,7 +138,8 @@ function Operation(props) {
 				<h1 className="page-header">{id ? "修改学生" : "添加学生"}</h1>
 				<form id="myForm" onSubmit={submitStuInfo}>
 					<div className="well">
-						<div className="form-group">
+						{formList}
+						{/* <div className="form-group">
 							<label>姓名</label>
 							<input
 								type="text"
@@ -185,9 +224,8 @@ function Operation(props) {
 								value={stu.profile}
 								onChange={(e) => updateStuInfo(e.target.value, 'profile')}
 							></textarea>
-						</div>
+						</div> */}
 						<button type="submit" className="btn btn-primary">{id ? "确认修改" : "确认添加"}</button>
-						{/* <button type="submit" className="btn btn-primary">确认</button> */}
 					</div>
 				</form>
       </div>

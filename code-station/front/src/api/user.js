@@ -31,3 +31,34 @@ export function addUser(newUserInfo) {
     method: "POST",
   });
 }
+
+/**
+ * 用户登录
+ */
+export function userLoginApi(data) {
+  return request({
+    url: '/api/user/login',
+    method: 'POST',
+    data
+  })
+}
+
+/**
+ * 根据id查找用户
+ */
+export function getUserById(id) {
+  return request({
+    url: `/api/user/${id}`,
+    method: 'GET'
+  })
+}
+
+/**
+ * 恢复登录状态
+ */
+export function getInfo() {
+  return request({
+    url: '/api/user/whoami',
+    method: 'GET'
+  })
+}
