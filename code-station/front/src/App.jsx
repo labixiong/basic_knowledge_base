@@ -1,28 +1,28 @@
+import { useState, useEffect } from "react";
+import { Layout, message } from 'antd';
 import NavHeader from "./components/NavHeader";
 import PageFooter from "./components/PageFooter";
-import RouterConfig from "./router/index.jsx"
-import LoginForm from "./components/LoginForm"
+import { getInfo, getUserById } from "./api/user";
+import { changeLoginStatus, initUserInfo } from "./redux/userSlice";
+import { useDispatch } from "react-redux";
 
 import "./css/App.css";
 
-import { useState, useEffect } from "react";
-import { Layout, message } from 'antd';
-import { useDispatch } from 'react-redux'
-import { changeLoginStatus, initUserInfo } from './redux/userSlice.js'
-import { getInfo, getUserById } from './api/user'
+import RouteBefore from "./router/RouteBefore"
+import LoginForm from "./components/LoginForm"
+
 const { Header, Footer, Content } = Layout;
 
 
 function App() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  // 加载根组件时，恢复用户的登录状态
+  // 加载根组件的时候，需要恢复用户的登录状态
   useEffect(() => {
     async function fetchData() {
       const result = await getInfo();
-      console.log(result);
       if (result.data) {
         // 说明 token 有效
         // 获取该 id 对应的用户信息，存储到状态仓库
@@ -39,7 +39,9 @@ function App() {
     if (localStorage.getItem("userToken")) {
       fetchData();
     }
-  })
+
+  }, [])
+
 
   /**
    * 关闭弹框
@@ -63,7 +65,7 @@ function App() {
       </Header>
       {/* 匹配上的路由页面 */}
       <Content className="content">
-        <RouterConfig />
+        <RouteBefore />
       </Content>
       {/* 底部 */}
       <Footer className="footer">

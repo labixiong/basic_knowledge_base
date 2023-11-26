@@ -35,22 +35,22 @@ export function addUser(newUserInfo) {
 /**
  * 用户登录
  */
-export function userLoginApi(data) {
+export function userLogin(loginInfo) {
   return request({
-    url: '/api/user/login',
-    method: 'POST',
-    data
-  })
+    url: "/api/user/login",
+    method: "POST",
+    data: loginInfo,
+  });
 }
 
 /**
- * 根据id查找用户
+ * 根据 id 来查找用户
  */
 export function getUserById(id) {
   return request({
     url: `/api/user/${id}`,
-    method: 'GET'
-  })
+    method: "GET",
+  });
 }
 
 /**
@@ -58,7 +58,28 @@ export function getUserById(id) {
  */
 export function getInfo() {
   return request({
-    url: '/api/user/whoami',
-    method: 'GET'
+    url: "/api/user/whoami",
+    method: "GET",
+  });
+}
+
+/**
+ * 获取积分前十的用户
+ */
+export function getUserByPointsRank(){
+  return request({
+    url : "/api/user/pointsrank",
+    method : "GET",
+  })
+}
+
+/**
+ * 根据id修改用户
+ */
+export function editUser(userId, userInfo) {
+  return request({
+    url: `/api/user/${userId}`,
+    method: 'PATCH',
+    data: userInfo
   })
 }
