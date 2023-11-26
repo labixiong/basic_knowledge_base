@@ -4,7 +4,7 @@ import { editUser } from "../api/user";
 export const updateUserInfoAsync = createAsyncThunk('user/updateUserInfoAsync', async (payload, thunkApi) => {
   await editUser(payload.userId, payload.newInfo)
 
-  thunkApi.dispatch(updateUserInfo(payload.newInfo))
+  thunkApi.dispatch(updateStoreUserInfo(payload.newInfo))
 })
 
 
@@ -29,7 +29,7 @@ const userSlice = createSlice({
     },
 
     // 更新用户信息
-    updateUserInfo: (state, { payload }) => {
+    updateStoreUserInfo: (state, { payload }) => {
       for (const key in payload) {
         state.userInfo[key] = payload[key]
       }
@@ -37,5 +37,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { initUserInfo,changeLoginStatus, clearUserInfo } = userSlice.actions;
+export const { initUserInfo,changeLoginStatus, updateStoreUserInfo, clearUserInfo } = userSlice.actions;
 export default userSlice.reducer;
