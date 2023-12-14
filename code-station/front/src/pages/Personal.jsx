@@ -324,6 +324,9 @@ export default function Personal(props) {
       <PageHeader title='个人中心'></PageHeader>
       {/* 信息展示 */}
       <div className={styles.container}>
+        <div className={styles.row}>
+          <video src='/static/uploads/166bf852ca7176ba2c5593ddbc1dd657-115071492.avi' width='200px' height='200px' controls autoPlay></video>
+        </div>
         {/* 基本信息 */}
         <div className={styles.row}>
           <Card title='基本信息' extra={(<div className={styles.edit} onClick={() => showModal('基本信息')}>编辑</div>)}>
