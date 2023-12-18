@@ -1,0 +1,21 @@
+{
+  "name": "advanced",
+  "version": "1.0.0",
+  "description": "[TOC]",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --watch src -e ts --exec ts-node src/decorator/practice.ts",
+    "build": "rd /s /q dist & tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.10.4"
+  },
+  "dependencies": {
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
+    "reflect-metadata": "^0.2.1"
+  }
+}
