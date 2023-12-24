@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MessageChannel</title>
+</head>
+<body>
+  <div>
+    <input type="text" name="message" id="message" placeholder="请输入消息" />
+  </div>
+
+  <div>
+    <button id="btn1">给 port1 发消息</button>
+    <button id="btn2">给 port2 发消息</button>
+  </div>
+
+  <script>
+    const { MessageChannel } = window;
+    const mc = new MessageChannel();
+
+    // 两个消息端口，这两个消息端口可以进行信息的通信
+    const port1 = mc.port1;
+    const port2 = mc.port2;
+
+    const btn1 = document.getElementById('btn1');
+    const btn2 = document.getElementById('btn2');
+    const message = document.getElementById('message');
+
+    btn1.onclick = () => {
+      port2.postMessage(message.value);
+    };
+
+    port1.onmessage = (e) => {
+      console.log(`port1收到消息：${e.data}`);
+    };
+
+    btn2.onclick = () => {
+      port1.postMessage(message.value);
+    };
+
+    port2.onmessage = (e) => {
+      console.log(`port2收到消息：${e.data}`);
+    };
+  </script>
+</body>
+</html>

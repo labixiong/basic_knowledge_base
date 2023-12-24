@@ -766,4 +766,59 @@ Fiber可以从三个方面去理解：
 
 Fiber双缓冲指的就是在内存中构建两棵树，并直接在内存中进行替换的技术。在React中使用Wip Fiber Tree和Current Fiber Tree这两棵树来实现更新的逻辑，WipFiberTree在内存中完成更新，而CurrentFiberTree是最终要渲染的树，两棵树通过alternate指针相互指向，这样在下一次渲染的时候，直接复用Wip FiberTree作为下一次的渲染树，而上一次的渲染树又作为新的WipFiberTree，这样可以加快DOM节点的替换和更新
 
+## MessageChannel
+
+在react中就是通过MessageChannel派发宏任务
+
+浏览器原生支持的一个API
+
+本身是用来做消息通信的，允许我们创建一个消息通道，通过它的两个MessagePort来进行消息的发送和接收
+
+MessagePort和MessageChannel的区别：
+
+- MessagePort：消息端口，用于在不同的线程之间发送消息
+- MessageChannel：消息通道，用于在同一个线程内的不同位置发送消息
+
+MessageChannel的特点：
+
+- 双向通信
+- 不会阻塞
+- 不会丢失消息
+- 不会泄漏消息
+
+基本使用如下：
+
+> 文件所在位置：src/MessageChannel.html
+
+那么和Scheduler有什么关系呢？
+
+Scheduler是用来调度任务，调度任务需要满足两个条件：
+
+1. js暂停，将主线程还给浏览器，让浏览器能够有序的重新渲染页面
+2. 暂停了的js（说明还没有执行完），需要再下一次接着执行
+
+那么这里自然而然就会想到事件循环，我们可以将没有执行完的js放入到任务队列，下一次事件循环的时候再取出来执行
+
+那么如何将没有执行完的任务放入到任务队列中呢?
+
+这里需要产生一个任务（宏任务），这里可以使用MessageChannel，因为MessageChannel能够产生宏任务
+
+**扩展：为什么不选择setTimeout来产生宏任务**
+
+这是因为setTimeout在嵌套层级超过5层，timeout如果小于4ms，那么则会设置为4ms。
+
+具体可以参阅[html规范](https://html.spec.whatwg.org/multipage/timers-and-user-prompts.html#dom-settimeout)
+
+正是由于这个原因，react团队没有选择setTimeout，因为4ms的时间是不可忽视的
+
+**为什么没有选择requestAnimationFrame？**
+
+只能在重新渲染之前，才能够执行一次，而如果我们来包装成一个任务，放入到任务队列中，那么只要没到重新渲染的时间，就可以一直从任务队列里面获取任务来执行
+
+而且requestAnimationFrame还有一定的兼容性问题，safari和edge浏览器是将它放到渲染之后执行的，chrome和firefox是将它放到渲染之前执行的，执行顺序存在差异
+
+**为什么没有选择包装成一个微任务？**
+
+这是因为和微任务的执行机制有关系，微任务队列会在清空整个队列之后才会结束。那么微任务会在页面更新前一直执行，直到队列被清空，达不到将主线程还给浏览器的目的
+
 
